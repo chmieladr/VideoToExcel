@@ -11,3 +11,4 @@ tesseract_opencl_profile_devices.dat
 # My private results
 /*_frames/
 *.xlsx
+tests.md

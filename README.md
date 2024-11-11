@@ -3,6 +3,7 @@
 Simple Python script to convert a video with consistent dataflow to an Excel file. Utilises the following packages:
 - `opencv-python` - video processing
 - `openpyxl` - Excel file creation
+- `pandas` - data manipulation
 - `pillow` - image processing
 - `pytesseract` - reading text from images
 

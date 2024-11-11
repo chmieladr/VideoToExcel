@@ -14,8 +14,13 @@ def measures(text: str, verbose: bool = False) -> dict:
     timestamp += datetime.timedelta(seconds=1)
 
     lines = [line for line in text.splitlines() if line]  # remove empty lines
-    lines[10] = lines[10] + ' ' + lines[11]  # merge lines 10 and 11
-    del lines[11]
+    for i in range(len(lines)):
+        try:
+            if lines[i].startswith("246") and lines[i + 1].startswith("Nominal"):
+                lines[i] = lines[i] + ' ' + lines[i + 1]  # merge lines i and i+1
+                del lines[i + 1]
+        except IndexError:
+            break
 
     for i in range(0, len(lines), 2):
         result_dict[f"{' '.join(lines[i].split()[1:])}"] = lines[i + 1].split()[0]

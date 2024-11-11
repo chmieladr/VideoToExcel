@@ -58,9 +58,14 @@ def extract_text(image_path: str) -> str:
     return text
 
 
-def extract_data(frames_folder_path: str, processor: callable, start_timestamp: int = 0, verbose: bool = False):
+def extract_data(frames_folder_path: str, processor: callable, verbose: bool = False,
+                 start_timestamp: int = 0, end_timestamp: int = None):
     df = None
-    files_list = os.listdir(frames_folder_path)[start_timestamp:]
+
+    if end_timestamp is not None:
+        files_list = os.listdir(frames_folder_path)[start_timestamp:end_timestamp]
+    else:
+        files_list = os.listdir(frames_folder_path)[start_timestamp:]
 
     for filename in files_list:
         if filename.endswith(".jpg"):
