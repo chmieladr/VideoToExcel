@@ -60,8 +60,7 @@ def extract_text(image_path: str) -> str:
 
 def extract_data(frames_folder_path: str, processor: callable, verbose: bool = False,
                  start_timestamp: int = 0, end_timestamp: int = None):
-    df = None
-
+    df, columns = None, None
     if end_timestamp is not None:
         files_list = os.listdir(frames_folder_path)[start_timestamp:end_timestamp]
     else:
@@ -72,12 +71,20 @@ def extract_data(frames_folder_path: str, processor: callable, verbose: bool = F
             try:
                 image_path = os.path.join(frames_folder_path, filename)
                 processed_text = processor(extract_text(image_path))
-                if df is None:
+
+                if df is None:  # create a new DataFrame if it doesn't exist
+                    columns = processed_text.keys()
                     df = pd.DataFrame(columns=processed_text.keys())
-                df = pd.concat([df, pd.DataFrame([processed_text])], ignore_index=True)
+
+                if columns != processed_text.keys():  # check if the column names match
+                    if verbose:
+                        print(f"Error for frame `{filename}`: Column mismatch")
+                    continue
+
+                df = pd.concat([df, pd.DataFrame([processed_text], columns=columns)], ignore_index=True)
             except Exception as e:
                 if verbose:
-                    print(f"Error for file {filename}: {e}")
+                    print(f"Error for frame `{filename}`: {e}")
                 continue
 
     excel_path = f"{frames_folder_path[:-7]}.xlsx"
